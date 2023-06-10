@@ -1,5 +1,4 @@
 import * as Three from 'three';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { RGBEBufferLoader } from './three/RGBEBufferLoader.js';
 
 function updateWindowSize() {
@@ -19,8 +18,7 @@ function rotateView(event: MouseEvent) {
 // Scene setup
 
 const ldrLoader = new Three.TextureLoader();
-const hdrLoader = new RGBELoader();
-const hdrBufferLoader = new RGBEBufferLoader();
+const hdrLoader = new RGBEBufferLoader();
 
 export const container: HTMLCanvasElement = document.querySelector('#viewport')!;
 export const scene = new Three.Scene();
@@ -33,9 +31,13 @@ const sphere_mat = new Three.MeshBasicMaterial({ side: Three.BackSide });
 const sphere_mesh = new Three.Mesh(sphere_geo, sphere_mat);
 scene.add(sphere_mesh);
 
+function isHDR(file: string): boolean {
+	return file.endsWith('.hdr') || file.endsWith('.exr');
+}
+
 async function loadTexture(url: string): Promise<void> {
 	let tex: Three.Texture;
-	if (url.endsWith('.hdr') || url.endsWith('.exr')) {
+	if (isHDR(url)) {
 		tex = await hdrLoader.loadAsync(url);
 		renderer.toneMapping = Three.ReinhardToneMapping;
 	}
@@ -44,27 +46,25 @@ async function loadTexture(url: string): Promise<void> {
 		renderer.toneMapping = Three.LinearToneMapping;
 	}
 
-	tex.colorSpace = Three.SRGBColorSpace;
 	sphere_mat.map = tex;
 	sphere_mat.needsUpdate = true;
-}
-
-function isHDR(file: File): boolean {
-	return file.name.endsWith('.hdr') || file.name.endsWith('.exr');
+	return Promise.resolve();
 }
 
 async function loadTextureFile(file: File): Promise<void> {
 	return new Promise(resolve => {
 		const reader = new FileReader();
+		const is_hdr = isHDR(file.name);
+
 		reader.onload = async () => {
+
 			let tex;
-			if (isHDR(file)) {
-				tex = hdrBufferLoader.fromBuffer(<ArrayBuffer>reader.result);
+			if (is_hdr) {
+				tex = hdrLoader.fromBuffer(<ArrayBuffer> reader.result);
 				renderer.toneMapping = Three.ReinhardToneMapping;
 			}
 			else {
-				tex = await ldrLoader.loadAsync(<string>reader.result);
-				// tex.colorSpace = Three.SRGBColorSpace;
+				tex = await ldrLoader.loadAsync(<string> reader.result);
 				renderer.toneMapping = Three.LinearToneMapping;
 			}
 
@@ -72,10 +72,9 @@ async function loadTextureFile(file: File): Promise<void> {
 			sphere_mat.needsUpdate = true;
 			resolve();
 		}
-		if (isHDR(file))
-			reader.readAsArrayBuffer(file);
-		else
-			reader.readAsDataURL(file);
+
+		if (is_hdr)  reader.readAsArrayBuffer(file);
+		else         reader.readAsDataURL(file);
 	});
 }
 

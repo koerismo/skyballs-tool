@@ -24,8 +24,7 @@ action_import.addEventListener('click', () => {
 
 SceneManager.setExposure(1.0);
 vp_exposure.addEventListener('input', () => {
-	//@ts-ignore shitty type conversion. nothing to see here.
-	const value: number = vp_exposure.value * 1;
+	const value: number = parseFloat(vp_exposure.value);
 
 	SceneManager.setExposure(value);
 	vp_exposure_value.innerText = value.toFixed(2);
@@ -44,5 +43,5 @@ document.body.addEventListener('drop', event => {
 });
 
 action_export.addEventListener('click', () => {
-	renderCube(16);
+	renderCube(32);
 });
