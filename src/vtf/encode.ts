@@ -46,12 +46,12 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 			//              RGBf = RGBf * Af / 256
 
 			for ( let i=0; i<src.length; i+=4 ) {
-				const max = Math.max(src[i], src[i+1], src[i+2]);
+				const max = Math.ceil(Math.max(src[i], src[i+1], src[i+2]) * 255);
 
-				arr[i  ] = src[i+2] / max * 255;
-				arr[i+1] = src[i+1] / max * 255;
-				arr[i+2] = src[i  ] / max * 255;
-				arr[i+3] = max / 16 * 255;
+				arr[i  ] = src[i+2] / max;
+				arr[i+1] = src[i+1] / max;
+				arr[i+2] = src[i  ] / max;
+				arr[i+3] = max;
 			}
 			break;
 
