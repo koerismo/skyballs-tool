@@ -14,8 +14,6 @@ function readCameraData() {
 	// Read the render target's data as a float32array.
 	const target = new Float32Array(export_target.width * export_target.height * 4);
 	export_renderer.readRenderTargetPixels(export_target, 0, 0, export_target.width, export_target.height, target);
-
-	// Temporary: log the data
 	return target;
 }
 

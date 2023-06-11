@@ -98,7 +98,7 @@ async function loadTextureFile(file: File): Promise<void> {
 // Renderer setup
 
 export const renderer = new Three.WebGLRenderer({ canvas: container, antialias: true, stencil: false, depth: false });
-renderer.setPixelRatio(devicePixelRatio);
+renderer.setPixelRatio(window.devicePixelRatio);
 updateWindowSize();
 
 function animate() {

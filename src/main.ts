@@ -80,7 +80,7 @@ action_export.addEventListener('click', async () => {
 	console.log('Converting images...');
 	const blob_cube = generateCubeVtfs(rendered, size, format, compress_enable, compress_level);
 
-	console.log('Creating zip...')
-	const zip = await createZip(name, blob_cube, format === 'BGRA8888');
+	console.log('Creating zip...');
+	const zip = await createZip(name, blob_cube, format === 'BGRA8');
 	saveAs(zip, name+'.zip');
 });
