@@ -1,6 +1,8 @@
 import './style.css';
 import SceneManager from './scene.js';
 import { renderCube } from './render.js';
+import { generateVtf } from './vtf/index.js';
+import saveAs from 'save-as';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
@@ -43,5 +45,7 @@ document.body.addEventListener('drop', event => {
 });
 
 action_export.addEventListener('click', () => {
-	renderCube(32);
+	saveAs(generateVtf([
+		renderCube(1024)
+	], 1024, 'RGBA32F', false), 'box.vtf');
 });

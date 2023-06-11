@@ -9,11 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/pako": "^2.0.0",
     "@types/three": "^0.152.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "pako": "^2.1.0",
+    "save-as": "^0.1.8",
     "three": "^0.153.0"
   }
 }

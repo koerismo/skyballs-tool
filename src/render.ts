@@ -14,15 +14,17 @@ function readCameraData() {
 	export_renderer.readRenderTargetPixels(export_target, 0, 0, export_target.width, export_target.height, target);
 
 	// Temporary: log the data
-	console.log(target);
+	return target;
 }
 
 export function renderCube(resolution: number) {
 	// TODO: Possibly render mipmaps through this? The buffer has to be sized correctly, otherwise webgl shits itself.
-	export_target.setSize(resolution, resolution, 1);
+	export_renderer.setSize(resolution, resolution);
+	export_target.setSize(resolution, resolution);
+	export_renderer.setRenderTarget(export_target);
 
 	// North face
 	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
 	export_renderer.render( scene, export_camera );
-	const face_n = readCameraData();
+	return readCameraData();
 }
