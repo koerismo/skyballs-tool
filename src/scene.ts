@@ -40,6 +40,7 @@ export const camera = new Three.PerspectiveCamera(90, container.clientWidth / co
 const sphere_geo = new Three.SphereGeometry(1, 200, 100);
 const sphere_mat = new Three.MeshBasicMaterial({ side: Three.DoubleSide });
 const sphere_mesh = new Three.Mesh(sphere_geo, sphere_mat);
+sphere_geo.scale(1, 1, -1);
 scene.add(sphere_mesh);
 
 function isHDR(file: string): boolean {
