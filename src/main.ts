@@ -68,9 +68,9 @@ action_export.addEventListener('click', async () => {
 	if (isNaN(size))
 		return alert(`Could not parse size "${input_size.value}"`);
 	if (size > 8192)
-		return alert(`Size must be <= 8192!`);
+		return alert(`Size must be smaller than or equal to 8192!`);
 	if (size < 16)
-		return alert(`Size must be higher than 16!`);
+		return alert(`Size must be larger than or equal to 16!`);
 	if ((Math.log2(size) % 1) && !confirm('Size should be a power of two! Continue anyways?'))
 		return;
 
