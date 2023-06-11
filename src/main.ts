@@ -42,7 +42,7 @@ vp_exposure.addEventListener('input', () => {
 	vp_exposure_value.innerText = value.toFixed(2);
 });
 
-SceneManager.loadTexture('/test/kloofendal_overcast_1k.hdr');
+SceneManager.loadTexture('./test/kloofendal_overcast_1k.hdr');
 
 document.body.addEventListener('dragover', event => {
 	event.preventDefault();
