@@ -17,8 +17,8 @@ export const FormatBytesPerPixel: {[key in ImageFormats]: number} = {
 export const FormatIds: {[key in ImageFormats]: number} = {
 	'RGBA8':   0,
 	'BGRA8':   12,
-	'RGBA16F': 25,
-	'RGBA16':  24,
+	'RGBA16F': 24,
+	'RGBA16':  25,
 	'RGB32F':  28,
 	'RGBA32F': 29
 } as const;
