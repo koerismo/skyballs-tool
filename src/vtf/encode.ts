@@ -1,13 +1,15 @@
 import pako from 'pako';
+import { toHalfFloat } from 'three/src/extras/DataUtils.js';
 
 export type CompressionLevel = 0 | 1 | -1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export type ImageFormats = 'RGBA8'|'BGRA8'|'RGBA16'|'RGB32F'|'RGBA32F';
+export type ImageFormats = 'RGBA8'|'BGRA8'|'RGBA16'|'RGBA16F'|'RGB32F'|'RGBA32F';
 
 export const FormatBytesPerPixel: {[key in ImageFormats]: number} = {
 	'RGBA8':   4,
 	'BGRA8':   4,
 	'RGBA16':  8,
+	'RGBA16F': 8,
 	'RGB32F':  12,
 	'RGBA32F': 16,
 } as const;
@@ -15,7 +17,8 @@ export const FormatBytesPerPixel: {[key in ImageFormats]: number} = {
 export const FormatIds: {[key in ImageFormats]: number} = {
 	'RGBA8':   0,
 	'BGRA8':   12,
-	'RGBA16':  25,
+	'RGBA16F': 25,
+	'RGBA16':  24,
 	'RGB32F':  28,
 	'RGBA32F': 29
 } as const;
@@ -55,6 +58,12 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 		case 'RGBA16':
 			for ( let i=0; i<src.length; i++ ) {
 				view.setUint16(i*2, src[i] * 0xffff, true);
+			}
+			break;
+
+		case 'RGBA16F':
+			for ( let i=0; i<src.length; i++ ) {
+				view.setUint16(i*2, toHalfFloat(src[i]), true);
 			}
 			break;
 
