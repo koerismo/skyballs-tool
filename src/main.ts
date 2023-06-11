@@ -1,6 +1,10 @@
 import saveAs from 'save-as';
 
-import './style.css';
+import './css/index.css';
+import './css/inputs.css';
+import './css/range.css';
+
+
 import SceneManager from './scene.js';
 import { generateCubeVtfs } from './vtf/index.js';
 import { renderCube } from './render.js';

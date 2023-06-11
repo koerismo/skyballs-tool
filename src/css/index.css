@@ -50,16 +50,6 @@ html, body, #app {
 	gap: 10px;
 }
 
-button, select, input {
-	width: 100%;
-	margin: 0;
-}
-
-input[type="checkbox"] {
-	width: auto;
-	margin-left: auto;
-}
-
 #viewport {
 	width: 100%;
 	background: #ffffff05;

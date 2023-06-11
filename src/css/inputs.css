@@ -1,0 +1,63 @@
+
+button, select, input {
+	appearance: none;
+	width: 100%;
+	margin: 0;
+
+	background-color: #2b2a33;
+	border: 1px solid #8f8f9d;
+	border-radius: 3px;
+
+	font-size: 10pt;
+	padding: 0 4px;
+}
+
+button:hover, select:hover {
+	background-color: #52525e;
+}
+
+button {
+	border-radius: 5px;
+	padding: 2px 5px;
+}
+
+input:hover:not(input:disabled) {
+	border-color: #b1b1b9;
+}
+
+input:focus-visible:not(input:disabled) {
+	border-color: #007aff;
+	outline: 1px solid #007aff;
+	box-shadow: 0 0 0 2px #000, 0 0 0 4px #234465;
+}
+
+input[type="checkbox"] {
+	flex-shrink: 0;
+	flex-grow: 0;
+	margin: auto;
+
+	width: 18px;
+	height: 18px;
+}
+
+input[type="checkbox"]:checked {
+	opacity: 1;
+	background-color: #5e9eff;
+	border-color: #5e9eff;
+	background-image: url('assets/check.svg');
+	background-position: center;
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+input[type="checkbox"]:checked:hover {
+	background-color: #4985db;
+	border-color: #4985db;
+}
+
+select {
+	background-image: url('assets/dropdown.svg');
+	background-position: right center;
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
