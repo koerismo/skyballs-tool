@@ -8,6 +8,7 @@ import { createZip } from './export.js';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
+const input_name: HTMLInputElement = document.querySelector('#input-name')!;
 const input_format: HTMLInputElement = document.querySelector('#input-format')!;
 const input_compress: HTMLInputElement = document.querySelector('#input-compress')!;
 const input_compress_level: HTMLInputElement = document.querySelector('#input-compress-level')!;
@@ -54,6 +55,7 @@ document.body.addEventListener('drop', event => {
 });
 
 action_export.addEventListener('click', async () => {
+	const name = input_name.value.replace(/[^a-zA-Z0-9\-_]/g, '_');
 	const format = input_format.value;
 	const compress_enable = input_compress.checked;
 	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
@@ -70,6 +72,6 @@ action_export.addEventListener('click', async () => {
 
 	const rendered = renderCube(size);
 	const blob_cube = generateCubeVtfs(rendered, size, format, compress_enable, compress_level);
-	const zip = await createZip('skybox', blob_cube);
-	saveAs(zip, 'skybox.zip');
+	const zip = await createZip(name, blob_cube);
+	saveAs(zip, name+'.zip');
 });
