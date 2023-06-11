@@ -15,3 +15,11 @@ export function generateVtf(images: Float32Array[], width: number, format: Image
 		version: compress ? 6 : 5
 	})
 }
+
+export function generateCubeVtfs(cube:{[key: string]: Float32Array}, width: number, format: string, compress: boolean, compression_level: number) {
+	const out: {[key: string]: Blob} = {};
+	for ( const face in cube ) {
+		out[face] = generateVtf([cube[face]], width, format as ImageFormats, compress, compression_level as CompressionLevel);
+	}
+	return out;
+}

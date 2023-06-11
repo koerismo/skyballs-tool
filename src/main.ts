@@ -1,9 +1,10 @@
+import saveAs from 'save-as';
+
 import './style.css';
 import SceneManager from './scene.js';
-import { renderTest } from './render.js';
-import { generateVtf } from './vtf/index.js';
-import type { CompressionLevel, ImageFormats } from './vtf/encode.js';
-import saveAs from 'save-as';
+import { generateCubeVtfs } from './vtf/index.js';
+import { renderCube } from './render.js';
+import { createZip } from './export.js';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
@@ -52,7 +53,7 @@ document.body.addEventListener('drop', event => {
 	SceneManager.loadTextureFile(event.dataTransfer.files[0]);
 });
 
-action_export.addEventListener('click', () => {
+action_export.addEventListener('click', async () => {
 	const format = input_format.value;
 	const compress_enable = input_compress.checked;
 	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
@@ -67,7 +68,8 @@ action_export.addEventListener('click', () => {
 	if ((Math.log2(size) % 1) && !confirm('Size should be a power of two! Continue anyways?'))
 		return;
 
-	saveAs(generateVtf([
-		renderTest(size)
-	], size, format as ImageFormats, compress_enable, compress_level as CompressionLevel), 'box.vtf');
+	const rendered = renderCube(size);
+	const blob_cube = generateCubeVtfs(rendered, size, format, compress_enable, compress_level);
+	const zip = await createZip('skybox', blob_cube);
+	saveAs(zip, 'skybox.zip');
 });

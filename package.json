@@ -15,6 +15,7 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "@zip.js/zip.js": "^2.7.15",
     "pako": "^2.1.0",
     "save-as": "^0.1.8",
     "three": "^0.153.0"
