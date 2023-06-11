@@ -23,7 +23,52 @@ export function renderCube(resolution: number) {
 	export_target.setSize(resolution, resolution);
 	export_renderer.setRenderTarget(export_target);
 
-	// North face
+	// Front
+	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
+	export_renderer.render( scene, export_camera );
+	const face_front = readCameraData();
+
+	// Left
+	export_camera.setRotationFromEuler(new Three.Euler(0, -90, 0));
+	export_renderer.render( scene, export_camera );
+	const face_left = readCameraData();
+
+	// Back
+	export_camera.setRotationFromEuler(new Three.Euler(0, 180, 0));
+	export_renderer.render( scene, export_camera );
+	const face_back = readCameraData();
+
+	// Right
+	export_camera.setRotationFromEuler(new Three.Euler(0, 90, 0));
+	export_renderer.render( scene, export_camera );
+	const face_right = readCameraData();
+
+	// Up
+	export_camera.setRotationFromEuler(new Three.Euler(90, 90, 0));
+	export_renderer.render( scene, export_camera );
+	const face_up = readCameraData();
+
+	// Down
+	export_camera.setRotationFromEuler(new Three.Euler(-90, 90, 0));
+	export_renderer.render( scene, export_camera );
+	const face_down = readCameraData();
+
+	return {
+		face_front,
+		face_left,
+		face_back,
+		face_right,
+		face_up,
+		face_down,
+	}
+}
+
+export function renderTest(resolution: number) {
+	export_renderer.setSize(resolution, resolution);
+	export_target.setSize(resolution, resolution);
+	export_renderer.setRenderTarget(export_target);
+
+	// Front
 	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
 	export_renderer.render( scene, export_camera );
 	return readCameraData();

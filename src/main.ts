@@ -1,8 +1,9 @@
 import './style.css';
 import SceneManager from './scene.js';
-import { renderCube } from './render.js';
+import { renderTest } from './render.js';
 import { generateVtf } from './vtf/index.js';
 import saveAs from 'save-as';
+import { ImageFormats } from './vtf/encode.js';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
@@ -45,7 +46,20 @@ document.body.addEventListener('drop', event => {
 });
 
 action_export.addEventListener('click', () => {
+	const format = input_format.value;
+	const compress = input_compress.checked;
+	const size = parseInt(input_size.value);
+
+	if (isNaN(size))
+		return alert(`Could not parse size "${input_size.value}"`);
+	if (size > 16384)
+		return alert(`Size must be below 16,384!`);
+	if (size < 16)
+		return alert(`Size must be higher than 16!`);
+	if ((Math.log2(size) % 1) && !confirm('Size should be a power of two! Continue anyways?'))
+		return;
+
 	saveAs(generateVtf([
-		renderCube(1024)
-	], 1024, 'BGRA8', true), 'box.vtf');
+		renderTest(size)
+	], size, format as ImageFormats, compress), 'box.vtf');
 });
