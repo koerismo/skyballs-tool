@@ -33,7 +33,7 @@ export function renderCube(resolution: number) {
 	const face_front = readCameraData();
 
 	// Left
-	export_camera.setRotationFromEuler(new Three.Euler(0, D90*1, 0));
+	export_camera.setRotationFromEuler(new Three.Euler(0, D90*3, 0));
 	export_renderer.render( scene, export_camera );
 	const face_left = readCameraData();
 
@@ -43,17 +43,17 @@ export function renderCube(resolution: number) {
 	const face_back = readCameraData();
 
 	// Right
-	export_camera.setRotationFromEuler(new Three.Euler(0, D90*3, 0));
+	export_camera.setRotationFromEuler(new Three.Euler(0, D90*1, 0));
 	export_renderer.render( scene, export_camera );
 	const face_right = readCameraData();
 
 	// Up
-	export_camera.setRotationFromEuler(new Three.Euler(D90, 0, 0));
+	export_camera.setRotationFromEuler(new Three.Euler(D90, 0, -D90));
 	export_renderer.render( scene, export_camera );
 	const face_up = readCameraData();
 
 	// Down
-	export_camera.setRotationFromEuler(new Three.Euler(-D90, 0, 0));
+	export_camera.setRotationFromEuler(new Three.Euler(-D90, 0, D90));
 	export_renderer.render( scene, export_camera );
 	const face_down = readCameraData();
 

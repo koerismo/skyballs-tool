@@ -62,8 +62,11 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 			break;
 
 		case 'RGBA16F':
-			for ( let i=0; i<src.length; i++ ) {
-				view.setUint16(i*2, toHalfFloat(src[i]), true);
+			for ( let i=0; i<src.length; i+=4 ) {
+				view.setUint16(i*2,     toHalfFloat(src[i]),   true);
+				view.setUint16(i*2 + 2, toHalfFloat(src[i+1]), true);
+				view.setUint16(i*2 + 4, toHalfFloat(src[i+2]), true);
+				view.setUint16(i*2 + 6, 0x3c00,                true);
 			}
 			break;
 

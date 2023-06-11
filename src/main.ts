@@ -59,7 +59,7 @@ document.body.addEventListener('drop', event => {
 });
 
 action_export.addEventListener('click', async () => {
-	const name = input_name.value.replace(/[^a-zA-Z0-9\-_]/g, '_');
+	const name = input_name.value;
 	const format = input_format.value;
 	const compress_enable = input_compress.checked;
 	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
@@ -67,15 +67,20 @@ action_export.addEventListener('click', async () => {
 
 	if (isNaN(size))
 		return alert(`Could not parse size "${input_size.value}"`);
-	if (size > 16384)
-		return alert(`Size must be below 16,384!`);
+	if (size > 8192)
+		return alert(`Size must be <= 8192!`);
 	if (size < 16)
 		return alert(`Size must be higher than 16!`);
 	if ((Math.log2(size) % 1) && !confirm('Size should be a power of two! Continue anyways?'))
 		return;
 
+	console.log('Rendering cubemap...');
 	const rendered = renderCube(size);
+
+	console.log('Converting images...');
 	const blob_cube = generateCubeVtfs(rendered, size, format, compress_enable, compress_level);
-	const zip = await createZip(name, blob_cube);
+
+	console.log('Creating zip...')
+	const zip = await createZip(name, blob_cube, format === 'BGRA8888');
 	saveAs(zip, name+'.zip');
 });
