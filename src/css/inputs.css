@@ -44,7 +44,7 @@ input[type="checkbox"]:checked {
 	opacity: 1;
 	background-color: #5e9eff;
 	border-color: #5e9eff;
-	background-image: url('assets/check.svg');
+	background-image: url('../assets/check.svg');
 	background-position: center;
 	background-size: 100%;
 	background-repeat: no-repeat;
@@ -56,7 +56,7 @@ input[type="checkbox"]:checked:hover {
 }
 
 select {
-	background-image: url('assets/dropdown.svg');
+	background-image: url('../assets/dropdown.svg');
 	background-position: right center;
 	background-size: 20px 20px;
 	background-repeat: no-repeat;
