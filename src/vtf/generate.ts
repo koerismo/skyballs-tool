@@ -24,9 +24,10 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 	buf.write_u16(info.size);
 	buf.write_u16(info.size);
 	buf.write_u32(
-		0x0002 & // Trilinear
-		0x0004 & // Clamp S
-		0x0008   // Clamp T
+		0x0002 | // Trilinear
+		0x0004 | // Clamp S
+		0x0008 | // Clamp T
+		0x0100   // No mipmaps
 	);
 	buf.write_u16(1); // frames
 	buf.write_u16(0); // first frame
