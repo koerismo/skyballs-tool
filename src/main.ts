@@ -3,13 +3,20 @@ import SceneManager from './scene.js';
 import { renderTest } from './render.js';
 import { generateVtf } from './vtf/index.js';
 import saveAs from 'save-as';
-import { ImageFormats } from './vtf/encode.js';
+import { CompressionLevel, ImageFormats } from './vtf/encode.js';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
 const input_format: HTMLInputElement = document.querySelector('#input-format')!;
 const input_compress: HTMLInputElement = document.querySelector('#input-compress')!;
+const input_compress_level: HTMLInputElement = document.querySelector('#input-compress-level')!;
 const input_size: HTMLInputElement = document.querySelector('#input-size')!;
+
+input_compress.checked = false;
+input_compress_level.disabled = true;
+input_compress.addEventListener('input', () => {
+	input_compress_level.disabled = !input_compress.checked;
+});
 
 const vp_exposure: HTMLInputElement = document.querySelector('#vp-exposure')!;
 const vp_exposure_value: HTMLInputElement = document.querySelector('#vp-exposure-value')!;
@@ -47,7 +54,10 @@ document.body.addEventListener('drop', event => {
 
 action_export.addEventListener('click', () => {
 	const format = input_format.value;
-	const compress = input_compress.checked;
+
+	const compress_enable = input_compress.checked;
+	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
+
 	const size = parseInt(input_size.value);
 
 	if (isNaN(size))
@@ -61,5 +71,5 @@ action_export.addEventListener('click', () => {
 
 	saveAs(generateVtf([
 		renderTest(size)
-	], size, format as ImageFormats, compress), 'box.vtf');
+	], size, format as ImageFormats, compress_enable, compress_level as CompressionLevel), 'box.vtf');
 });

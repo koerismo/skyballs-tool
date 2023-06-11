@@ -15,7 +15,8 @@
 			</div>
 			<div>
 				<label>Format</label>
-				<select id="input-format" slo>
+				<select id="input-format">
+					<option value="RGBA8">RGBA8888</option>
 					<option value="BGRA8">BGRA8888</option>
 					<option value="RGBA16">RGBA16161616</option>
 					<option value="RGB32F">RGB323232F</option>
@@ -25,6 +26,7 @@
 			<div>
 				<label>Compression</label>
 				<input id="input-compress" type="checkbox" checked="true" />
+				<input id="input-compress-level" type="number" min="1" max="9" value="9" />
 			</div>
 			<div>
 				<label>Size</label>

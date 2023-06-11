@@ -36,24 +36,29 @@ function isHDR(file: string): boolean {
 	return file.endsWith('.hdr') || file.endsWith('.exr');
 }
 
-function setTonemapping(mapping: Three.ToneMapping) {
-	renderer.toneMapping = mapping;
-	export_renderer.toneMapping = mapping;
+function updateTexture(tex: Three.Texture, hdr: boolean) {
+	const tonemapping = hdr ? Three.ReinhardToneMapping : Three.LinearToneMapping;
+	export_renderer.toneMapping = tonemapping;
+	renderer.toneMapping = tonemapping;
+
+	tex.colorSpace = hdr ? Three.LinearSRGBColorSpace : Three.SRGBColorSpace;
+
+	sphere_mat.map = tex;
+	sphere_mat.needsUpdate = true;
 }
 
 async function loadTexture(url: string): Promise<void> {
 	let tex: Three.Texture;
-	if (isHDR(url)) {
+	const is_hdr = isHDR(url);
+
+	if (is_hdr) {
 		tex = await hdrLoader.loadAsync(url);
-		setTonemapping(Three.ReinhardToneMapping);
 	}
 	else {
 		tex = await ldrLoader.loadAsync(url);
-		setTonemapping(Three.LinearToneMapping);
 	}
 
-	sphere_mat.map = tex;
-	sphere_mat.needsUpdate = true;
+	if (tex) updateTexture(tex, is_hdr);
 	return Promise.resolve();
 }
 
@@ -67,15 +72,13 @@ async function loadTextureFile(file: File): Promise<void> {
 			let tex;
 			if (is_hdr) {
 				tex = hdrLoader.fromBuffer(<ArrayBuffer> reader.result);
-				setTonemapping(Three.ReinhardToneMapping);
 			}
 			else {
 				tex = await ldrLoader.loadAsync(<string> reader.result);
-				setTonemapping(Three.LinearToneMapping);
 			}
 
-			sphere_mat.map = tex;
-			sphere_mat.needsUpdate = true;
+			if (tex) updateTexture(tex, is_hdr);
+			else console.warn('Failed to parse file!');
 			resolve();
 		}
 
@@ -86,7 +89,7 @@ async function loadTextureFile(file: File): Promise<void> {
 
 // Renderer setup
 
-export const renderer = new Three.WebGLRenderer({ canvas: container, antialias: true });
+export const renderer = new Three.WebGLRenderer({ canvas: container, antialias: true, stencil: false, depth: false });
 renderer.setPixelRatio(devicePixelRatio);
 updateWindowSize();
 
