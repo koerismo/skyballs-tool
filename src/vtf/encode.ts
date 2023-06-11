@@ -60,9 +60,9 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 
 		case 'RGB32F':
 			for ( let i=0; i<src.length; i+=4 ) {
-				view.setFloat32(i*4,     src[i],   true);
-				view.setFloat32(i*4 + 4, src[i+1], true);
-				view.setFloat32(i*4 + 8, src[i+2], true);
+				view.setFloat32(i*3,     src[i],   true);
+				view.setFloat32(i*3 + 4, src[i+1], true);
+				view.setFloat32(i*3 + 8, src[i+2], true);
 			}
 			break;
 
