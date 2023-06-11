@@ -1,52 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Skyballs Editor</title>
-  </head>
-  <body>
-    <div id="app">
-		<div id="sidebar">
-			<div>
-				<button id="action-import">Import</button>
-				<button id="action-export">Export</button>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta property="og:title" content="Skyball Tool" />
+		<meta property="og:description" content="A HDRI to Source Engine skybox conversion tool." />
+		<title>Skyballs Editor</title>
+	</head>
+	<body>
+		<div id="app">
+			<div id="sidebar">
+				<div>
+					<button id="action-import">Import</button>
+					<button id="action-export">Export</button>
+				</div>
+				<div>
+					<label>Name</label>
+					<input id="input-name" type="text" value="skybox" />
+				</div>
+				<div>
+					<label>Format</label>
+					<select id="input-format">
+						<option value="RGBA8">RGBA8888</option>
+						<option value="BGRA8">BGRA8888</option>
+						<option value="RGBA16">RGBA16161616</option>
+						<option value="RGB32F">RGB323232F</option>
+						<option selected value="RGBA32F">RGBA32323232F</option>
+					</select>
+				</div>
+				<div>
+					<label>Compression</label>
+					<input id="input-compress" type="checkbox" checked="true" />
+					<input
+						id="input-compress-level"
+						type="number"
+						min="1"
+						max="9"
+						value="9"
+					/>
+				</div>
+				<div>
+					<label>Size</label>
+					<input
+						id="input-size"
+						type="number"
+						min="16"
+						max="8192"
+						value="1024"
+					/>
+				</div>
 			</div>
-			<div>
-				<label>Name</label>
-				<input id="input-name" type="text" value="skybox" />
+			<canvas id="viewport"></canvas>
+			<div id="viewport-settings">
+				<div>
+					<label>Exposure</label>
+					<label id="vp-exposure-value">1.0</label>
+				</div>
+				<input
+					id="vp-exposure"
+					type="range"
+					min="0.1"
+					max="4"
+					value="1"
+					step="0.05"
+				/>
 			</div>
-			<div>
-				<label>Format</label>
-				<select id="input-format">
-					<option value="RGBA8">RGBA8888</option>
-					<option value="BGRA8">BGRA8888</option>
-					<option value="RGBA16">RGBA16161616</option>
-					<option value="RGB32F">RGB323232F</option>
-					<option selected value="RGBA32F">RGBA32323232F</option>
-				</select>
-			</div>
-			<div>
-				<label>Compression</label>
-				<input id="input-compress" type="checkbox" checked="true" />
-				<input id="input-compress-level" type="number" min="1" max="9" value="9" />
-			</div>
-			<div>
-				<label>Size</label>
-				<input id="input-size" type="number" min="16" max="8192" value="1024" />
-			</div>
+			<!-- <canvas id="debug-canvas" width="128" height="128"></canvas> -->
 		</div>
-		<canvas id="viewport"></canvas>
-		<div id="viewport-settings">
-			<div>
-				<label>Exposure</label>
-				<label id="vp-exposure-value">1.0</label>
-			</div>
-			<input id="vp-exposure" type="range" min="0.1" max="4" value="1" step="0.05" />
-		</div>
-		<canvas id="debug-canvas" width="128" height="128"></canvas>
-	</div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>
