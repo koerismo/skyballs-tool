@@ -50,8 +50,16 @@ html, body, #app {
 	gap: 10px;
 }
 
+#viewport-container {
+	width: 100%;
+	position: relative;
+}
+
 #viewport {
 	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
 	background: #ffffff05;
 }
 

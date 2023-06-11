@@ -3,7 +3,8 @@ import { RGBEBufferLoader } from './three/RGBEBufferLoader.js';
 import { export_renderer } from './render.js';
 
 function updateWindowSize() {
-	camera.aspect = container.clientWidth / container.clientHeight;
+	renderer.setSize(divContainer.clientWidth, divContainer.clientHeight);
+	camera.aspect = divContainer.clientWidth / divContainer.clientHeight;
 	camera.updateProjectionMatrix();
 }
 
@@ -29,6 +30,7 @@ function zoomView(event: WheelEvent) {
 const ldrLoader = new Three.TextureLoader();
 const hdrLoader = new RGBEBufferLoader();
 
+export const divContainer: HTMLDivElement = document.querySelector('#viewport-container')!;
 export const container: HTMLCanvasElement = document.querySelector('#viewport')!;
 export const scene = new Three.Scene();
 export const camera = new Three.PerspectiveCamera(90, container.clientWidth / container.clientHeight, 0.1, 100 );
