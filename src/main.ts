@@ -2,8 +2,8 @@ import './style.css';
 import SceneManager from './scene.js';
 import { renderTest } from './render.js';
 import { generateVtf } from './vtf/index.js';
+import type { CompressionLevel, ImageFormats } from './vtf/encode.js';
 import saveAs from 'save-as';
-import { CompressionLevel, ImageFormats } from './vtf/encode.js';
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
@@ -54,10 +54,8 @@ document.body.addEventListener('drop', event => {
 
 action_export.addEventListener('click', () => {
 	const format = input_format.value;
-
 	const compress_enable = input_compress.checked;
 	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
-
 	const size = parseInt(input_size.value);
 
 	if (isNaN(size))

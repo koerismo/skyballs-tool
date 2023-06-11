@@ -9,11 +9,19 @@ function updateWindowSize() {
 
 const MOUSE_MULT = 1 / 200;
 const view_vector = new Three.Vector2(0, 0);
+let view_zoom = 1;
 function rotateView(event: MouseEvent) {
 	if (!event.buttons) return;
 	view_vector.x -= event.movementX * MOUSE_MULT;
 	view_vector.y += event.movementY * MOUSE_MULT;
 	view_vector.y = Math.min(Math.PI/2, Math.max(-Math.PI/2, view_vector.y));
+}
+
+function zoomView(event: WheelEvent) {
+	view_zoom -= event.deltaY * view_zoom / 400;
+	view_zoom = Math.max(0.5, Math.min(10, view_zoom));
+	camera.zoom = view_zoom;
+	camera.updateProjectionMatrix();
 }
 
 // Scene setup
@@ -111,6 +119,7 @@ function setExposure(exposure: number) {
 
 window.addEventListener('resize', updateWindowSize);
 container.addEventListener('mousemove', rotateView);
+container.addEventListener('wheel', zoomView);
 
 // Run everything
 
