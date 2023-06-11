@@ -4,7 +4,7 @@ import { scene } from './scene.js';
 // const debug_canvas: HTMLCanvasElement = document.querySelector('#debug-canvas')!;
 
 const export_camera = new Three.PerspectiveCamera(90, 1/1, 0.1, 2);
-const export_renderer = new Three.WebGLRenderer({ antialias: true });
+export const export_renderer = new Three.WebGLRenderer({ antialias: true });
 const export_target = new Three.WebGLRenderTarget(16, 16, { generateMipmaps: true, type: Three.FloatType });
 export_renderer.setRenderTarget(export_target);
 

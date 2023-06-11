@@ -56,7 +56,7 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 export function generateAXCBody(mips: Uint8Array[], level: number): ArrayBuffer {
 	const buf = new DataBuffer(mips.length * 4 + 4);
 	buf.write_i32(level);
-	for ( let i=mips.length-1; i>=0; i++ ) {
+	for ( let i=mips.length-1; i>0; i++ ) {
 		buf.write_u32(mips[i].length, true);
 	}
 	return buf.buffer;

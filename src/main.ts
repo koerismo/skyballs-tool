@@ -32,7 +32,7 @@ vp_exposure.addEventListener('input', () => {
 	vp_exposure_value.innerText = value.toFixed(2);
 });
 
-SceneManager.loadTexture('/test/kloofendal_overcast_2k.jpeg');
+SceneManager.loadTexture('/test/kloofendal_overcast_1k.hdr');
 
 document.body.addEventListener('dragover', event => {
 	event.preventDefault();
@@ -47,5 +47,5 @@ document.body.addEventListener('drop', event => {
 action_export.addEventListener('click', () => {
 	saveAs(generateVtf([
 		renderCube(1024)
-	], 1024, 'RGBA32F', false), 'box.vtf');
+	], 1024, 'BGRA8', true), 'box.vtf');
 });

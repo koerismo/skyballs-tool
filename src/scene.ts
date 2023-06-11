@@ -1,5 +1,6 @@
 import * as Three from 'three';
 import { RGBEBufferLoader } from './three/RGBEBufferLoader.js';
+import { export_renderer } from './render.js';
 
 function updateWindowSize() {
 	camera.aspect = container.clientWidth / container.clientHeight;
@@ -35,15 +36,20 @@ function isHDR(file: string): boolean {
 	return file.endsWith('.hdr') || file.endsWith('.exr');
 }
 
+function setTonemapping(mapping: Three.ToneMapping) {
+	renderer.toneMapping = mapping;
+	export_renderer.toneMapping = mapping;
+}
+
 async function loadTexture(url: string): Promise<void> {
 	let tex: Three.Texture;
 	if (isHDR(url)) {
 		tex = await hdrLoader.loadAsync(url);
-		renderer.toneMapping = Three.ReinhardToneMapping;
+		setTonemapping(Three.ReinhardToneMapping);
 	}
 	else {
 		tex = await ldrLoader.loadAsync(url);
-		renderer.toneMapping = Three.LinearToneMapping;
+		setTonemapping(Three.LinearToneMapping);
 	}
 
 	sphere_mat.map = tex;
@@ -61,11 +67,11 @@ async function loadTextureFile(file: File): Promise<void> {
 			let tex;
 			if (is_hdr) {
 				tex = hdrLoader.fromBuffer(<ArrayBuffer> reader.result);
-				renderer.toneMapping = Three.ReinhardToneMapping;
+				setTonemapping(Three.ReinhardToneMapping);
 			}
 			else {
 				tex = await ldrLoader.loadAsync(<string> reader.result);
-				renderer.toneMapping = Three.LinearToneMapping;
+				setTonemapping(Three.LinearToneMapping);
 			}
 
 			sphere_mat.map = tex;
