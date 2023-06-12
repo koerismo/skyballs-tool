@@ -7,8 +7,8 @@
 		<meta property="og:title" content="Skybox Tool" />
 		<meta property="og:description" content="A HDRI to Source Engine skybox conversion tool." />
 		<title>Skybox Tool</title>
-		<script type="module" crossorigin src="./assets/index-a5af3633.js"></script>
-		<link rel="stylesheet" href="./assets/index-4a663b90.css">
+		<script type="module" crossorigin src="./assets/index-f9a89234.js"></script>
+		<link rel="stylesheet" href="./assets/index-11f97e88.css">
 	</head>
 	<body>
 		<div id="app">
@@ -56,6 +56,12 @@
 			</div>
 			<div id="viewport-container">
 				<canvas id="viewport"></canvas>
+				<div id="loader-container" hidden>
+					<div>
+						<span>Converting...</span>
+						<progress id="loader-progress" max="100.0" value="0.0"></progress>
+					</div>
+				</div>
 			</div>
 			<div id="viewport-settings">
 				<div>
