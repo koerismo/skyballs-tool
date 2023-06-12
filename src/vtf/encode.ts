@@ -1,4 +1,4 @@
-import { deflateRaw } from 'pako';
+import { deflate } from 'pako';
 import { toHalfFloat } from 'three/src/extras/DataUtils.js';
 
 export type CompressionLevel = 0 | 1 | -1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -89,21 +89,6 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 	return new Uint8Array(buf);
 }
 
-// export async function compressMipmaps(mips: Uint8Array[], level: CompressionLevel ): Promise<Uint8Array[]> {
-// 	return new Promise(resolve => {
-// 		let i = 0;
-// 		const out: Uint8Array[] = new Array(mips.length);
-// 		const doMipmap = () => {
-
-// 			out[i] = deflateRaw(mips[i], { level: level });
-
-// 			i += 1;
-// 			if (i >= mips.length) resolve(out);
-// 			else setTimeout(doMipmap, 10);
-// 		}
-// 	});
-// }
-
-export function compressMipmap(mip: Uint8Array, level: CompressionLevel ): Uint8Array {
-	return deflateRaw(mip, { level: level });
+export function compressMipmap(mip: Uint8Array, level: CompressionLevel): Uint8Array {
+	return deflate(mip, { level: level });
 }

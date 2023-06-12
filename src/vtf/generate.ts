@@ -10,7 +10,7 @@ export interface VtfInfo {
 	format: ImageFormats;
 }
 
-export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: number): ArrayBuffer {
+export function writeFileHeader(buf: DataBuffer, info: VtfInfo, resourceCount: number): ArrayBuffer {
 
 	buf.set_endian(true);
 	buf.write_str('VTF\0', 4);
@@ -18,7 +18,7 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 	// File format version
 	buf.write_u32(7);
 	buf.write_u32(info.version);
-	buf.write_u32(headerLength);
+	buf.write_u32(80 + resourceCount * 8);
 
 	// Other properties
 	buf.write_u16(info.size);
@@ -27,7 +27,8 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 		0x0002 | // Trilinear
 		0x0004 | // Clamp S
 		0x0008 | // Clamp T
-		0x0100   // No mipmaps
+		0x0100 | // No mipmaps
+		0x0200   // No LOD
 	);
 	buf.write_u16(1); // frames
 	buf.write_u16(0); // first frame
@@ -41,6 +42,7 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 	buf.write_u8(info.mipmaps);
 
 	// Thumbnail
+	// TODO: Change to 16x16 and add 128 dummy bytes?
 	buf.write_u32(13); // format
 	buf.write_u8(0);   // width
 	buf.write_u8(0);   // height
@@ -48,15 +50,16 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 	buf.write_u16(1); // slices
 
 	buf.pad(3);
-	buf.write_u32(2); // resource count
+	buf.write_u32(resourceCount); // resource count
 	buf.pad(8);
 
 	return buf.buffer;
 }
 
 export function generateAXCBody(mips: Uint8Array[], level: number): ArrayBuffer {
-	const buf = new DataBuffer(mips.length * 4 + 4);
-	buf.write_i32(level);
+	const buf = new DataBuffer(mips.length * 4 + 8);
+	buf.write_u32(buf.length - 4, true);
+	buf.write_i32(level, true);
 	for ( let i=mips.length-1; i>=0; i-- ) {
 		buf.write_u32(mips[i].length, true);
 	}
@@ -78,19 +81,18 @@ export function generateFile(mip: Uint8Array, info: VtfInfo): Blob {
 	const headerBuf = new DataBuffer(headerLength);
 	body.push(headerBuf.buffer);
 
-	writeFileHeader(headerBuf, info, headerLength);
-	writeChunkHeader(headerBuf, '\x01\0\0', headerLength, 0x0);
+	writeFileHeader(headerBuf, info, resourceCount);
+	writeChunkHeader(headerBuf, '\x01\0\0', 0, 0x2);
+	writeChunkHeader(headerBuf, '\x30\0\0', headerLength, 0x0);
 
-	let bodyPointer = headerBuf.length;
+	const axcPointer = headerLength + mip.length;
+	body.push(mip);
+
 	if (isCompressed) {
-		writeChunkHeader(headerBuf, 'AXC', headerLength, 0x0);
+		writeChunkHeader(headerBuf, 'AXC', axcPointer, 0x0);
 		const axc_body = generateAXCBody([mip], info.compression_level);
-		bodyPointer += axc_body.byteLength;
 		body.push(axc_body);
 	}
-
-	writeChunkHeader(headerBuf, '\x30\0\0', bodyPointer, 0x0);
-	body.push(mip);
 
 	return new Blob(body)
 }

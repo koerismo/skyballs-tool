@@ -13,7 +13,7 @@ export function generateVtf(image: Float32Array, width: number, format: ImageFor
 		mipmaps: 1,
 		size: width,
 		version: compress ? 6 : 5
-	})
+	});
 }
 
 export async function generateCubeVtfs(
