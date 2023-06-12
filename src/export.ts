@@ -1,4 +1,5 @@
 import * as zip from '@zip.js/zip.js';
+import { ProgressUpdate } from './types';
 
 export function makePath(path: string) {
 	const normed = path.replace('\\', '/').replace('//', '/').replace(/[^a-zA-Z0-9\-_/]/g, '_');
@@ -8,7 +9,7 @@ export function makePath(path: string) {
 	return [paths.join('/'), last];
 }
 
-export async function createZip(name: string, files: {[key: string]: Blob}, compressed: boolean) {
+export async function createZip(name: string, files: {[key: string]: Blob}, compressed: boolean, on_progress?: ProgressUpdate) {
 	const [path, rootname] = makePath(name);
 	const blobWriter = new zip.BlobWriter();
 	const zipWriter = new zip.ZipWriter(blobWriter);
@@ -23,6 +24,8 @@ export async function createZip(name: string, files: {[key: string]: Blob}, comp
 		zipWriter.add(rootname+'up.vtf', new zip.BlobReader(files.face_up)),
 		zipWriter.add(rootname+'dn.vtf', new zip.BlobReader(files.face_down)),
 	]);
+
+	on_progress?.( 1 / 3 );
 
 	function vmt(suffix: string) {
 		return new zip.TextReader(`Sky
@@ -43,7 +46,12 @@ export async function createZip(name: string, files: {[key: string]: Blob}, comp
 		zipWriter.add(rootname+'dn.vmt', vmt('dn')),
 	]);
 
-	console.log('Closing zip.');
+	on_progress?.( 2 / 3 );
 
-	return await zipWriter.close();
+	console.log('Closing zip.');
+	const out = await zipWriter.close();
+
+	on_progress?.( 3 / 3 );
+
+	return out;
 }

@@ -1,9 +1,9 @@
+// @ts-expect-error No type declarations :(
 import saveAs from 'save-as';
 
 import './css/index.css';
 import './css/inputs.css';
 import './css/range.css';
-
 
 import SceneManager from './scene.js';
 import { generateCubeVtfs } from './vtf/index.js';
@@ -17,6 +17,9 @@ const input_format: HTMLInputElement = document.querySelector('#input-format')!;
 const input_compress: HTMLInputElement = document.querySelector('#input-compress')!;
 const input_compress_level: HTMLInputElement = document.querySelector('#input-compress-level')!;
 const input_size: HTMLInputElement = document.querySelector('#input-size')!;
+
+const loader_div: HTMLDivElement = document.querySelector('#loader-container')!;
+const loader_meter: HTMLMeterElement = document.querySelector('#loader-progress')!;
 
 input_compress.checked = false;
 input_compress_level.disabled = true;
@@ -74,13 +77,42 @@ action_export.addEventListener('click', async () => {
 	if ((Math.log2(size) % 1) && !confirm('Size should be a power of two! Continue anyways?'))
 		return;
 
-	console.log('Rendering cubemap...');
-	const rendered = renderCube(size);
+	loader_div.hidden = false;
+	action_import.disabled = true;
+	action_export.disabled = true;
 
-	console.log('Converting images...');
-	const blob_cube = generateCubeVtfs(rendered, size, format, compress_enable, compress_level);
+	const _progress = [0, 0, 0];
+	const _progressWeights = [0.5, 1.0, 0.3];
+	const _maxProgress = _progressWeights.reduce((a, b) => a + b, 0);
 
-	console.log('Creating zip...');
-	const zip = await createZip(name, blob_cube, format === 'BGRA8');
-	saveAs(zip, name+'.zip');
+	function updateProgress(item: number, value: number) {
+		_progress[item] = value;
+		loader_meter.value = _progress.reduce((x, y, i) => x + y*_progressWeights[i], 0) / _maxProgress * 100;
+	}
+
+	try {
+		console.log('Rendering cubemap...');
+		const rendered = renderCube(size);
+		
+		updateProgress(0, 1.0);
+
+		console.log('Converting images...');
+		const blob_cube = await generateCubeVtfs(rendered, size, format, compress_enable, compress_level, (x) => updateProgress(1,x));
+
+		console.log('Creating zip...');
+		const zip = await createZip(name, blob_cube, format === 'BGRA8', (x) => updateProgress(2,x));
+
+		saveAs(zip, name+'.zip');
+	}
+
+	catch(e) {
+		console.warn(e);
+		alert('An error occurred! Info logged to console.');
+	}
+
+	finally {
+		loader_div.hidden = true;
+		action_import.disabled = false;
+		action_export.disabled = false;
+	}
 });

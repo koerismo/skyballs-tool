@@ -65,16 +65,16 @@ export function renderCube(resolution: number) {
 	}
 }
 
-export function renderTest(resolution: number) {
-	export_renderer.setSize(resolution, resolution);
-	export_target.setSize(resolution, resolution);
-	export_renderer.setRenderTarget(export_target);
+// export function renderTest(resolution: number) {
+// 	export_renderer.setSize(resolution, resolution);
+// 	export_target.setSize(resolution, resolution);
+// 	export_renderer.setRenderTarget(export_target);
 
-	// Front
-	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
-	export_renderer.render( scene, export_camera );
-	return readCameraData();
-}
+// 	// Front
+// 	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
+// 	export_renderer.render( scene, export_camera );
+// 	return readCameraData();
+// }
 
 // globalThis.debugThing = function() {
 // 	export_camera.projectionMatrix.scale(new Three.Vector3(1, -1, 1));

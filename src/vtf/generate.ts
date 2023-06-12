@@ -57,7 +57,7 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, headerLength: nu
 export function generateAXCBody(mips: Uint8Array[], level: number): ArrayBuffer {
 	const buf = new DataBuffer(mips.length * 4 + 4);
 	buf.write_i32(level);
-	for ( let i=mips.length-1; i>0; i++ ) {
+	for ( let i=mips.length-1; i>=0; i-- ) {
 		buf.write_u32(mips[i].length, true);
 	}
 	return buf.buffer;
@@ -69,7 +69,7 @@ function writeChunkHeader(buffer: DataBuffer, tag: string, offset: number, flags
 	buffer.write_u32(offset);
 }
 
-export function generateFile(mips: Uint8Array[], info: VtfInfo): Blob {
+export function generateFile(mip: Uint8Array, info: VtfInfo): Blob {
 	const isCompressed = info.version >= 6 && info.compress;
 	const resourceCount = isCompressed ? 3 : 2;
 
@@ -84,13 +84,13 @@ export function generateFile(mips: Uint8Array[], info: VtfInfo): Blob {
 	let bodyPointer = headerBuf.length;
 	if (isCompressed) {
 		writeChunkHeader(headerBuf, 'AXC', headerLength, 0x0);
-		const axc_body = generateAXCBody(mips, info.compression_level);
+		const axc_body = generateAXCBody([mip], info.compression_level);
 		bodyPointer += axc_body.byteLength;
 		body.push(axc_body);
 	}
 
 	writeChunkHeader(headerBuf, '\x30\0\0', bodyPointer, 0x0);
-	body.push(...mips);
+	body.push(mip);
 
 	return new Blob(body)
 }

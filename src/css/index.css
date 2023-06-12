@@ -88,3 +88,23 @@ html, body, #app {
 	left: 0;
 	z-index: 99;
 }
+
+#loader-container {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: #111a;
+	display: flex;
+}
+
+#loader-container[hidden] {
+	display: none;
+}
+
+#loader-container > div {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+}
