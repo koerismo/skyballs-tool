@@ -46,7 +46,6 @@ input_format.addEventListener('input', updateInfo);
 input_compress.addEventListener('input', updateInfo);
 input_compress_level.addEventListener('input', updateInfo);
 input_size.addEventListener('input', updateInfo);
-updateInfo();
 
 input_compress.checked = false;
 input_compress_level.disabled = true;
