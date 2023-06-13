@@ -8,10 +8,28 @@ import './css/range.css';
 import SceneManager from './scene.js';
 import { generateCubeVtfs } from './vtf/index.js';
 import { renderCube } from './render.js';
-import { createZip } from './export.js';
+import { createZip, makePath } from './export.js';
+import { FormatBytesPerPixel, type ImageFormats } from './vtf/encode.js';
+
+function updateInfo() {
+	const format = input_format.value;
+	const compress_enable = input_compress.checked;
+	const compress_level = Math.max(Math.min(parseInt(input_compress_level.value) || 6, 9), 1);
+	const size = parseInt(input_size.value);
+
+	const bpp = FormatBytesPerPixel[format as ImageFormats];
+	let filesize = (80+16 + 20*(+compress_enable) + bpp*size*size) * 6;
+	if (compress_enable) filesize /= 1.8 + compress_level / 90;
+
+	if (filesize >= 1000000000) info_filesize.innerText = (Math.round(filesize/1000/1000/1000*10)/10) + 'GB';
+	else info_filesize.innerText = (Math.round(filesize/1000/1000*10)/10) + 'MB';
+
+	info_version.innerText = compress_enable ? 'v7.6' : 'v7.5';
+}
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
 const action_export: HTMLButtonElement = document.querySelector('#action-export')!;
+
 const input_name: HTMLInputElement = document.querySelector('#input-name')!;
 const input_format: HTMLInputElement = document.querySelector('#input-format')!;
 const input_compress: HTMLInputElement = document.querySelector('#input-compress')!;
@@ -20,6 +38,15 @@ const input_size: HTMLInputElement = document.querySelector('#input-size')!;
 
 const loader_div: HTMLDivElement = document.querySelector('#loader-container')!;
 const loader_meter: HTMLMeterElement = document.querySelector('#loader-progress')!;
+
+const info_version: HTMLSpanElement = document.querySelector('#info-version')!;
+const info_filesize: HTMLSpanElement = document.querySelector('#info-size')!;
+
+input_format.addEventListener('input', updateInfo);
+input_compress.addEventListener('input', updateInfo);
+input_compress_level.addEventListener('input', updateInfo);
+input_size.addEventListener('input', updateInfo);
+updateInfo();
 
 input_compress.checked = false;
 input_compress_level.disabled = true;
@@ -100,9 +127,10 @@ action_export.addEventListener('click', async () => {
 		const blob_cube = await generateCubeVtfs(rendered, size, format, compress_enable, compress_level, (x) => updateProgress(1,x));
 
 		console.log('Creating zip...');
-		const zip = await createZip(name, blob_cube, format === 'BGRA8', (x) => updateProgress(2,x));
+		const [path, rootname] = makePath(name);
+		const zip = await createZip(path, rootname, blob_cube, format === 'BGRA8', (x) => updateProgress(2,x));
 
-		saveAs(zip, name+'.zip');
+		saveAs(zip, rootname+'.zip');
 	}
 
 	catch(e) {

@@ -17,7 +17,7 @@ function readCameraData() {
 	return target;
 }
 
-export function renderCube(resolution: number) {
+export function renderCube(resolution: number): Cube<Float32Array> {
 	// TODO: Possibly render mipmaps through this? The buffer has to be sized correctly, otherwise webgl shits itself.
 	export_renderer.setSize(resolution, resolution);
 	export_target.setSize(resolution, resolution);
@@ -28,40 +28,40 @@ export function renderCube(resolution: number) {
 	// Front
 	export_camera.setRotationFromEuler(new Three.Euler(0, D90*3, 0));
 	export_renderer.render( scene, export_camera );
-	const face_front = readCameraData();
+	const front = readCameraData();
 
 	// Left
 	export_camera.setRotationFromEuler(new Three.Euler(0, D90*2, 0));
 	export_renderer.render( scene, export_camera );
-	const face_left = readCameraData();
+	const left = readCameraData();
 
 	// Back
 	export_camera.setRotationFromEuler(new Three.Euler(0, D90*1, 0));
 	export_renderer.render( scene, export_camera );
-	const face_back = readCameraData();
+	const back = readCameraData();
 
 	// Right
 	export_camera.setRotationFromEuler(new Three.Euler(0, 0, 0));
 	export_renderer.render( scene, export_camera );
-	const face_right = readCameraData();
+	const right = readCameraData();
 
 	// Up
 	export_camera.setRotationFromEuler(new Three.Euler(D90, 0, 0));
 	export_renderer.render( scene, export_camera );
-	const face_up = readCameraData();
+	const up = readCameraData();
 
 	// Down
 	export_camera.setRotationFromEuler(new Three.Euler(-D90, 0, 0));
 	export_renderer.render( scene, export_camera );
-	const face_down = readCameraData();
+	const down = readCameraData();
 
 	return {
-		face_front,
-		face_left,
-		face_back,
-		face_right,
-		face_up,
-		face_down,
+		front,
+		left,
+		back,
+		right,
+		up,
+		down,
 	}
 }
 

@@ -1,6 +1,6 @@
 import { generateFile } from './generate.js';
 import { CompressionLevel, ImageFormats, compressMipmap, encodeMipmap } from './encode.js';
-import type { ProgressUpdate } from '../types.js';
+export const CUBE_FACES: FaceList = ['front', 'left', 'back', 'right', 'up', 'down'];
 
 export function generateVtf(image: Float32Array, width: number, format: ImageFormats, compress: boolean, compression_level: CompressionLevel) {
 	let mip = encodeMipmap(image, format);
@@ -17,7 +17,7 @@ export function generateVtf(image: Float32Array, width: number, format: ImageFor
 }
 
 export async function generateCubeVtfs(
-		cube:{[key: string]: Float32Array},
+		cube: Cube<Float32Array>,
 		width: number,
 		format: string,
 		compress: boolean,
@@ -26,17 +26,15 @@ export async function generateCubeVtfs(
 
 	return new Promise(resolve => {
 		const out: {[key: string]: Blob} = {};
-		const faces = Object.keys(cube);
-
 		let i = 0;
 		const doFace = () => {
 
-			const face = faces[i];
+			const face = CUBE_FACES[i];
 			out[face] = generateVtf(cube[face], width, format as ImageFormats, compress, compression_level as CompressionLevel);
 
 			i += 1;
-			on_progress?.(i / faces.length);
-			if (i >= faces.length) resolve(out);
+			on_progress?.(i / CUBE_FACES.length);
+			if (i >= CUBE_FACES.length) resolve(out);
 			else setTimeout(doFace, 20);
 		}
 

@@ -1,28 +1,31 @@
 import * as zip from '@zip.js/zip.js';
-import { ProgressUpdate } from './types';
+
+// const EncodeWorker = new Worker(new URL('./worker/encode.ts', import.meta.url), { type: 'module' });
 
 export function makePath(path: string) {
 	const normed = path.replace('\\', '/').replace('//', '/').replace(/[^a-zA-Z0-9\-_/]/g, '_');
 	const paths = normed.split('/');
-	const last = paths[paths.length-1] = 'sky_' + paths[paths.length-1];
+
+	const last = paths.length-1;
+	if (!paths[last].startsWith('sky_')) paths[last] = 'sky_' + paths[last];
+	
 	paths.unshift('skybox');
-	return [paths.join('/'), last];
+	return [paths.join('/'), paths[last+1]];
 }
 
-export async function createZip(name: string, files: {[key: string]: Blob}, compressed: boolean, on_progress?: ProgressUpdate) {
-	const [path, rootname] = makePath(name);
+export async function createZip(path: string, rootname: string, files: {[key: string]: Blob}, compressed: boolean, on_progress?: ProgressUpdate) {
 	const blobWriter = new zip.BlobWriter();
 	const zipWriter = new zip.ZipWriter(blobWriter);
 
 	console.log('Writing VTFs to zip...');
 
 	await Promise.allSettled([
-		zipWriter.add(rootname+'lf.vtf', new zip.BlobReader(files.face_left)),
-		zipWriter.add(rootname+'ft.vtf', new zip.BlobReader(files.face_front)),
-		zipWriter.add(rootname+'bk.vtf', new zip.BlobReader(files.face_back)),
-		zipWriter.add(rootname+'rt.vtf', new zip.BlobReader(files.face_right)),
-		zipWriter.add(rootname+'up.vtf', new zip.BlobReader(files.face_up)),
-		zipWriter.add(rootname+'dn.vtf', new zip.BlobReader(files.face_down)),
+		zipWriter.add(rootname+'lf.vtf', new zip.BlobReader(files.left)),
+		zipWriter.add(rootname+'ft.vtf', new zip.BlobReader(files.front)),
+		zipWriter.add(rootname+'bk.vtf', new zip.BlobReader(files.back)),
+		zipWriter.add(rootname+'rt.vtf', new zip.BlobReader(files.right)),
+		zipWriter.add(rootname+'up.vtf', new zip.BlobReader(files.up)),
+		zipWriter.add(rootname+'dn.vtf', new zip.BlobReader(files.down)),
 	]);
 
 	on_progress?.( 1 / 3 );

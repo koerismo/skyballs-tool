@@ -38,16 +38,39 @@ html, body, #app {
 	border-right: 1px solid #fff5;
 }
 
-#sidebar > * {
-	padding: 10px;
-	border-bottom: 1px solid #fff1;
-	flex-direction: column;
-}
-
 #sidebar > div {
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
+
+	padding: 10px;
+	border-bottom: 1px solid #fff1;
+}
+
+.stretch {
+	flex-grow: 1;
+}
+
+#sidebar > div.bottom {
+	border-top: 1px solid #fff1;
+	border-bottom: none;
+}
+
+#sidebar > #info-container {
+	flex-direction: column;
+}
+
+#info-table {
+	display: grid;
+	grid-template-columns: auto 80px;
+	grid-auto-rows: auto;
+
+	font-size: 10pt;
+	color: #fff8;
+}
+
+#info-table label {
+	font-weight: bold;
 }
 
 #viewport-container {
