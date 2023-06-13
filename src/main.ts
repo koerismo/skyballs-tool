@@ -24,7 +24,7 @@ function updateInfo() {
 	if (filesize >= 1000000000) info_filesize.innerText = (Math.round(filesize/1000/1000/1000*10)/10) + 'GB';
 	else info_filesize.innerText = (Math.round(filesize/1000/1000*10)/10) + 'MB';
 
-	info_version.innerText = compress_enable ? 'v7.6' : 'v7.5';
+	info_version.innerText = compress_enable ? 'v7.6' : 'v7.4';
 }
 
 const action_import: HTMLButtonElement = document.querySelector('#action-import')!;
