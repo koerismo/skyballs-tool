@@ -60,7 +60,7 @@ export function generateAXCBody(mips: Uint8Array[], level: number): ArrayBuffer 
 	const buf = new DataBuffer(mips.length * 4 + 8);
 	buf.write_u32(buf.length - 4, true);
 	buf.write_i32(level, true);
-	for ( let i=mips.length-1; i>=0; i-- ) {
+	for ( let i=0; i<mips.length; i++ ) {
 		buf.write_u32(mips[i].length, true);
 	}
 	return buf.buffer;
