@@ -119,7 +119,7 @@ action_export.addEventListener('click', async () => {
 	try {
 		console.log('Rendering cubemap...');
 		const rendered = renderCube(size);
-		
+
 		updateProgress(0, 1.0);
 
 		console.log('Converting images...');

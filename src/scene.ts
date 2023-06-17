@@ -30,6 +30,7 @@ function zoomView(event: WheelEvent) {
 
 const ldrLoader = new Three.TextureLoader();
 const hdrLoader = new RGBEBufferLoader();
+const context = { hdr: true, exposure: 1.0 };
 
 export const divContainer: HTMLDivElement = document.querySelector('#viewport-container')!;
 export const container: HTMLCanvasElement = document.querySelector('#viewport')!;
@@ -49,12 +50,16 @@ function isHDR(file: string): boolean {
 }
 
 function updateTexture(tex: Three.Texture, hdr: boolean) {
+	context.hdr = hdr;
+
 	const tonemapping = hdr ? Three.ReinhardToneMapping : Three.LinearToneMapping;
 	export_renderer.toneMapping = tonemapping;
 	renderer.toneMapping = tonemapping;
 
-	tex.colorSpace = hdr ? Three.LinearSRGBColorSpace : Three.SRGBColorSpace;
+	const colorSpace = hdr ? Three.LinearSRGBColorSpace : Three.SRGBColorSpace;
+	tex.colorSpace = export_renderer.outputColorSpace = renderer.outputColorSpace = colorSpace;
 
+	setExposure(context.exposure);
 	sphere_mat.map = tex;
 	sphere_mat.needsUpdate = true;
 }
@@ -118,7 +123,8 @@ function animate() {
 }
 
 function setExposure(exposure: number) {
-	renderer.toneMappingExposure = exposure;
+	context.exposure = exposure;
+	renderer.toneMappingExposure = context.hdr ? exposure*4 : exposure;
 }
 
 window.addEventListener('resize', updateWindowSize);

@@ -24,11 +24,12 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, resourceCount: n
 	buf.write_u16(info.size);
 	buf.write_u16(info.size);
 	buf.write_u32(
-		0x0002 | // Trilinear
+		0x0001 | // Point sampling
 		0x0004 | // Clamp S
 		0x0008 | // Clamp T
 		0x0100 | // No mipmaps
-		0x0200   // No LOD
+		0x0200 | // No LOD
+		0x2000   // 8-bit alpha
 	);
 	buf.write_u16(1); // frames
 	buf.write_u16(0); // first frame

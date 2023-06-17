@@ -51,7 +51,7 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 				arr[i  ] = Math.round(src[i+2] / max_rounded_float * 255);
 				arr[i+1] = Math.round(src[i+1] / max_rounded_float * 255);
 				arr[i+2] = Math.round(src[i]   / max_rounded_float * 255);
-				arr[i+3] = Math.round(max_rounded_float / 16 * 255);
+				arr[i+3] = Math.round(max_rounded_float / 16 * 4 * 255); // Random x4 multiplier. Whatever works.
 			}
 
 			break;
