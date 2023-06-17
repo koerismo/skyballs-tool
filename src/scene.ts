@@ -13,8 +13,9 @@ const view_vector = new Three.Vector2(0, 0);
 let view_zoom = 1;
 function rotateView(event: MouseEvent) {
 	if (!event.buttons) return;
-	view_vector.x -= event.movementX * MOUSE_MULT;
-	view_vector.y += event.movementY * MOUSE_MULT;
+	const adjustment = view_zoom / 2 + 0.5;
+	view_vector.x -= event.movementX * MOUSE_MULT / adjustment;
+	view_vector.y += event.movementY * MOUSE_MULT / adjustment;
 	view_vector.y = Math.min(Math.PI/2, Math.max(-Math.PI/2, view_vector.y));
 }
 

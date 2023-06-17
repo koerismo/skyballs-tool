@@ -76,7 +76,7 @@ export function generateFile(mip: Uint8Array, info: VtfInfo): Blob {
 	const isCompressed = info.version >= 6 && info.compress;
 	const resourceCount = isCompressed ? 3 : 2;
 
-	const body = [];
+	const body: BlobPart[] = [];
 	const headerLength = 80 + resourceCount * 8;
 	const headerBuf = new DataBuffer(headerLength);
 	body.push(headerBuf.buffer);
