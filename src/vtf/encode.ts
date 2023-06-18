@@ -22,6 +22,14 @@ export const FormatIds: {[key in ImageFormats]: number} = {
 	'RGBA32F': 29
 } as const;
 
+function clamp8(u: number) {
+	return Math.min(u, 0xff);
+}
+
+function clamp16(u: number) {
+	return Math.min(u, 0xffff);
+}
+
 export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Array {
 	const bpp = FormatBytesPerPixel[format];
 
@@ -33,7 +41,7 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 
 		case 'RGBA8':
 			for ( let i=0; i<src.length; i++ ) {
-				arr[i] = src[i] * 255;
+				arr[i] = clamp8(src[i] * 255);
 			}
 			break;
 
@@ -51,14 +59,17 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 				arr[i  ] = Math.round(src[i+2] / max_rounded_float * 255);
 				arr[i+1] = Math.round(src[i+1] / max_rounded_float * 255);
 				arr[i+2] = Math.round(src[i]   / max_rounded_float * 255);
-				arr[i+3] = Math.round(max_rounded_float / 16 * 4 * 255); // Random x4 multiplier. Whatever works.
+				arr[i+3] = Math.round(max_rounded_float / 16 * 2 * 255); // Random x2 multiplier. Fuck it!!
 			}
 
 			break;
 
 		case 'RGBA16':
-			for ( let i=0; i<src.length; i++ ) {
-				view.setUint16(i*2, src[i] * 0xffff, true);
+			for ( let i=0; i<src.length; i+=4 ) {
+				view.setUint16(i*2,     clamp16(src[i]   * 0xffff), true);
+				view.setUint16(i*2 + 2, clamp16(src[i+1] * 0xffff), true);
+				view.setUint16(i*2 + 4, clamp16(src[i+2] * 0xffff), true);
+				view.setUint16(i*2 + 6, 0xffff,            true);
 			}
 			break;
 
@@ -67,7 +78,7 @@ export function encodeMipmap(src: Float32Array, format: ImageFormats): Uint8Arra
 				view.setUint16(i*2,     toHalfFloat(src[i]),   true);
 				view.setUint16(i*2 + 2, toHalfFloat(src[i+1]), true);
 				view.setUint16(i*2 + 4, toHalfFloat(src[i+2]), true);
-				view.setUint16(i*2 + 6, 0x3c00,                true);
+				view.setUint16(i*2 + 6, 0x3c00, true);
 			}
 			break;
 

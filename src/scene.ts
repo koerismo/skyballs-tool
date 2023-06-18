@@ -53,7 +53,6 @@ function updateTexture(tex: Three.Texture, hdr: boolean) {
 	context.hdr = hdr;
 
 	const tonemapping = hdr ? Three.ReinhardToneMapping : Three.LinearToneMapping;
-	export_renderer.toneMapping = tonemapping;
 	renderer.toneMapping = tonemapping;
 
 	const colorSpace = hdr ? Three.LinearSRGBColorSpace : Three.SRGBColorSpace;
