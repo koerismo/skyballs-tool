@@ -10,7 +10,14 @@ export interface VtfInfo {
 	format: ImageFormats;
 }
 
+const NEAREST   = 0x0001;
+const TRILINEAR = 0x0002;
+
 export function writeFileHeader(buf: DataBuffer, info: VtfInfo, resourceCount: number): ArrayBuffer {
+
+	// Engine bug: Trilinear on BGRA-compressed images
+	// causes artifacting between the pixels.
+	const FILTER = info.format === 'BGRA8' ? NEAREST : TRILINEAR;
 
 	buf.set_endian(true);
 	buf.write_str('VTF\0', 4);
@@ -24,7 +31,7 @@ export function writeFileHeader(buf: DataBuffer, info: VtfInfo, resourceCount: n
 	buf.write_u16(info.size);
 	buf.write_u16(info.size);
 	buf.write_u32(
-		0x0001 | // Point sampling
+		FILTER | // Image filtering
 		0x0004 | // Clamp S
 		0x0008 | // Clamp T
 		0x0100 | // No mipmaps
